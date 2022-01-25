@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { ListItem, Text } from "react-native-elements";
 import { useTasks } from "../providers/TasksProvider";
 import { ActionSheet } from "./ActionSheet";
-import { Task } from "../schemas";
 
 import styles from "../stylesheet";
 
@@ -23,27 +22,19 @@ export function TaskItem({ task }) {
   // move the task into that status. Rather than creating a generic method to
   // avoid repetition, we split each status to separate each case in the code
   // below for demonstration purposes.
-  if (task.status !== "" && task.status !== Task.STATUS_OPEN) {
+  if (task.isComplete) {
     actions.push({
-      title: "Mark Open",
+      title: "Mark incomplete",
       action: () => {
-        setTaskStatus(task, Task.STATUS_OPEN);
+        setTaskStatus(task, false);
       },
     });
   }
-  if (task.status !== Task.STATUS_IN_PROGRESS) {
+  else {
     actions.push({
-      title: "Mark In Progress",
+      title: "Mark complete",
       action: () => {
-        setTaskStatus(task, Task.STATUS_IN_PROGRESS);
-      },
-    });
-  }
-  if (task.status !== Task.STATUS_COMPLETE) {
-    actions.push({
-      title: "Mark Complete",
-      action: () => {
-        setTaskStatus(task, Task.STATUS_COMPLETE);
+        setTaskStatus(task, true);
       },
     });
   }
@@ -53,28 +44,24 @@ export function TaskItem({ task }) {
       <ActionSheet
         visible={actionSheetVisible}
         closeOverlay={() => {
-          if (task.status) {
-            setActionSheetVisible(false);
-          }
+          setActionSheetVisible(false);
         }}
         actions={actions}
       />
-      <ListItem 
-        key={task.id} 
+      <ListItem
+        key={task.id}
         onPress={() => {
           setActionSheetVisible(true);
         }}
         bottomDivider>
         <ListItem.Content>
           <ListItem.Title>
-            {task.name}
+            {task.summary}
             </ListItem.Title>
         </ListItem.Content>
         {
-          task.status === Task.STATUS_COMPLETE ? (
+          task.isComplete === true ? (
             <Text>&#10004; {/* checkmark */}</Text>
-          ) : task.status === Task.STATUS_IN_PROGRESS ? (
-            <Text>In Progress</Text>
           ) : null
         }
       </ListItem>

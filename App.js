@@ -39,6 +39,7 @@ const App = () => {
             {(props) => {
               const { navigation, route } = props;
               const { user, projectPartition } = route.params;
+
               return (
                 <TasksProvider user={user} projectPartition={projectPartition}>
                   <TasksView navigation={navigation} route={route} />
