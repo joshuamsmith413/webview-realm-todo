@@ -31,7 +31,7 @@ export function TasksView({ navigation, route }) {
         task ? <TaskItem key={`${task._id}`} task={task} /> : null
       )}
 
-      {name === "My Project" ? (
+      {name === "asdf My Project" ? (
         <>
           <View style={styles.manageTeamButtonContainer}>
             <Button

@@ -15,7 +15,7 @@ const TasksProvider = ({ children, projectPartition }) => {
   const realmRef = useRef(null);
 
   useEffect(() => {
-    // Enables offline-first: opens a local realm immediately without waiting 
+    // Enables offline-first: opens a local realm immediately without waiting
     // for the download of a synchronized realm to be completed.
     const OpenRealmBehaviorConfiguration = {
       type: 'openImmediately',
@@ -34,7 +34,7 @@ const TasksProvider = ({ children, projectPartition }) => {
       realmRef.current = projectRealm;
 
       const syncTasks = projectRealm.objects("Task");
-      let sortedTasks = syncTasks.sorted("name");
+      let sortedTasks = syncTasks.sorted("summary");
       setTasks([...sortedTasks]);
       sortedTasks.addListener(() => {
         setTasks([...sortedTasks]);
@@ -59,29 +59,20 @@ const TasksProvider = ({ children, projectPartition }) => {
       projectRealm.create(
         "Task",
         new Task({
-          name: newTaskName || "New Task",
+          summary: newTaskName || "New Task",
+          isComplete: false,
+          description: "",
           partition: projectPartition,
         })
       );
     });
   };
 
-  const setTaskStatus = (task, status) => {
-    // One advantage of centralizing the realm functionality in this provider is
-    // that we can check to make sure a valid status was passed in here.
-    if (
-      ![
-        Task.STATUS_OPEN,
-        Task.STATUS_IN_PROGRESS,
-        Task.STATUS_COMPLETE,
-      ].includes(status)
-    ) {
-      throw new Error(`Invalid status: ${status}`);
-    }
+  const setTaskStatus = (task, isComplete) => {
     const projectRealm = realmRef.current;
 
     projectRealm.write(() => {
-      task.status = status;
+      task.isComplete = isComplete;
     });
   };
 
@@ -90,7 +81,7 @@ const TasksProvider = ({ children, projectPartition }) => {
     const projectRealm = realmRef.current;
     projectRealm.write(() => {
       projectRealm.delete(task);
-      setTasks([...projectRealm.objects("Task").sorted("name")]);
+      setTasks([...projectRealm.objects("Task").sorted("summary")]);
     });
   };
 
