@@ -52,7 +52,7 @@ const TasksProvider = ({ children, projectPartition }) => {
     };
   }, [user, projectPartition]);
 
-  const createTask = (newTaskName) => {
+  const createTask = (newTaskName, description, summary) => {
     const projectRealm = realmRef.current;
     projectRealm.write(() => {
       // Create a new task in the same partition -- that is, in the same project.
@@ -61,7 +61,7 @@ const TasksProvider = ({ children, projectPartition }) => {
         new Task({
           summary: newTaskName || "New Task",
           isComplete: false,
-          description: "",
+          description: description,
           partition: projectPartition,
         })
       );

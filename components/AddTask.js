@@ -9,6 +9,8 @@ import styles from "../stylesheet";
 export function AddTask({ createTask }) {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [newTaskName, setNewTaskName] = useState("");
+  const [description, setDescription] = useState("");
+  const [summary, setSummary] = useState("")
 
   return (
     <>
@@ -23,11 +25,19 @@ export function AddTask({ createTask }) {
             onChangeText={(text) => setNewTaskName(text)}
             autoFocus={true}
           />
+          <Input 
+          placeholder="description"
+          onChange={setDescription}
+          value={description}/>
+          <Input 
+          placeholder="summary"
+          onChange={setSummary}
+          value={summary}/>
           <Button
             title="Create"
             onPress={() => {
               setOverlayVisible(false);
-              createTask(newTaskName);
+              createTask(newTaskName, description, summary);
             }}
           />
         </>
