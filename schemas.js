@@ -22,9 +22,10 @@ class Task {
     name: "Task",
     properties: {
       _id: "objectId",
+      _partition: "string",
       isComplete: "bool",
       summary: "string",
-      description: "string",
+      description: "string?",
     },
     primaryKey: "_id",
   };

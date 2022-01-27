@@ -27,11 +27,33 @@ const TasksProvider = ({ children, projectPartition }) => {
         partitionValue: projectPartition,
         newRealmFileBehavior: OpenRealmBehaviorConfiguration,
         existingRealmFileBehavior: OpenRealmBehaviorConfiguration,
+        error: (_session, error) => {
+          (error) => {
+            console.warn(error.name, error.message);
+          };
+        },
       },
     };
     // open a realm for this particular project
     Realm.open(config).then((projectRealm) => {
       realmRef.current = projectRealm;
+
+      const syncSession = realmRef.current.syncSession;
+
+      syncSession.addProgressNotification(
+        "upload",
+        "reportIndefinitely",
+        (transferred, transferable) => {
+          console.log(`${transferred} bytes has been transferred`);
+          console.log(
+            `There are ${transferable} total transferable bytes, including the ones that have already been transferred`
+          );
+
+          if (!syncSession.isConnected()) {
+            console.warn("Realm sync isn't connected");
+          }
+        },
+      );
 
       const syncTasks = projectRealm.objects("Task");
       let sortedTasks = syncTasks.sorted("summary");
