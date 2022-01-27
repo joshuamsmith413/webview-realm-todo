@@ -33,7 +33,7 @@ const AuthProvider = ({ children }) => {
 
     // Open a realm with the logged in user's partition value in order
     // to get the projects that the logged in user is a member of
-    Realm.open(config).then((userRealm) => {
+    Realm.open().then((userRealm) => {
       realmRef.current = userRealm;
       const users = userRealm.objects("User");
 

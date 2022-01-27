@@ -8,6 +8,7 @@ const TasksContext = React.createContext(null);
 const TasksProvider = ({ children, projectPartition }) => {
   const [tasks, setTasks] = useState([]);
   const { user } = useAuth();
+  console.log('user',user)
 
   // Use a Ref to store the realm rather than the state because it is not
   // directly rendered, so updating it should not trigger a re-render as using
@@ -20,6 +21,7 @@ const TasksProvider = ({ children, projectPartition }) => {
     const OpenRealmBehaviorConfiguration = {
       type: 'openImmediately',
     };
+ 
     const config = {
       schema: [Task.schema],
       sync: {
@@ -35,7 +37,7 @@ const TasksProvider = ({ children, projectPartition }) => {
       },
     };
     // open a realm for this particular project
-    Realm.open(config).then((projectRealm) => {
+    Realm.open({schema: [Task.schema]}).then((projectRealm) => {
       realmRef.current = projectRealm;
 
       const syncSession = realmRef.current.syncSession;
