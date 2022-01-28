@@ -8,7 +8,6 @@ const TasksContext = React.createContext(null);
 const TasksProvider = ({ children, projectPartition }) => {
   const [tasks, setTasks] = useState([]);
   const { user } = useAuth();
-  console.log('user',user)
 
   // Use a Ref to store the realm rather than the state because it is not
   // directly rendered, so updating it should not trigger a re-render as using
@@ -21,7 +20,6 @@ const TasksProvider = ({ children, projectPartition }) => {
     const OpenRealmBehaviorConfiguration = {
       type: 'openImmediately',
     };
- 
     const config = {
       schema: [Task.schema],
       sync: {
@@ -41,29 +39,31 @@ const TasksProvider = ({ children, projectPartition }) => {
       realmRef.current = projectRealm;
 
       const syncSession = realmRef.current.syncSession;
+      if (!!syncSession) {
 
-      syncSession.addProgressNotification(
-        "upload",
-        "reportIndefinitely",
-        (transferred, transferable) => {
-          console.log(`${transferred} bytes has been transferred`);
-          console.log(
-            `There are ${transferable} total transferable bytes, including the ones that have already been transferred`
-          );
-
-          if (!syncSession.isConnected()) {
-            console.warn("Realm sync isn't connected");
+        syncSession.addProgressNotification(
+          "upload",
+          "reportIndefinitely",
+          (transferred, transferable) => {
+            console.log(`${transferred} bytes has been transferred`);
+            console.log(
+              `There are ${transferable} total transferable bytes, including the ones that have already been transferred`
+              );
+              
+              if (!syncSession.isConnected()) {
+                console.warn("Realm sync isn't connected");
+              }
+            },
+            );
           }
-        },
-      );
-
-      const syncTasks = projectRealm.objects("Task");
-      let sortedTasks = syncTasks.sorted("summary");
-      setTasks([...sortedTasks]);
-      sortedTasks.addListener(() => {
-        setTasks([...sortedTasks]);
-      });
-    });
+            
+            const syncTasks = projectRealm.objects("Task");
+            let sortedTasks = syncTasks.sorted("summary");
+            setTasks([...sortedTasks]);
+            sortedTasks.addListener(() => {
+              setTasks([...sortedTasks]);
+            });
+        });
 
     return () => {
       // cleanup function
@@ -92,6 +92,14 @@ const TasksProvider = ({ children, projectPartition }) => {
     });
   };
 
+  const updateTask = (taskToUpdate, summary, description) => {
+
+    realmRef.current.write(() => {
+      taskToUpdate.summary = summary
+      taskToUpdate.description = description
+    })
+  }
+
   const setTaskStatus = (task, isComplete) => {
     const projectRealm = realmRef.current;
 
@@ -118,6 +126,7 @@ const TasksProvider = ({ children, projectPartition }) => {
         createTask,
         deleteTask,
         setTaskStatus,
+        updateTask,
         tasks,
       }}
     >

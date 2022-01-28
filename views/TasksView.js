@@ -16,14 +16,15 @@ export function TasksView({ navigation, route }) {
   const [overlayVisible, setOverlayVisible] = useState(false);
 
   const { tasks, createTask } = useTasks();
-  let something;
+
+  let something = tasks;
   if (tasks.length === 0) {
     something = [{
       id: 1,
       name: 'update tasks',
       description: 'give users the ability to edit tasks'
     }]
-  } else something = tasks
+  }
 
   useEffect(() => {
     navigation.setOptions({
@@ -36,7 +37,7 @@ export function TasksView({ navigation, route }) {
 
   return (
     <View>
-      {something.map((task) =>
+      {tasks.map((task) =>
         task ? <TaskItem key={`${task._id}`} task={task} /> : null
       )}
 

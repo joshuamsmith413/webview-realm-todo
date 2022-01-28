@@ -1,23 +1,37 @@
-import React from 'react';
-import { Text, View, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, TextInput, Button } from 'react-native';
 import { Overlay, Input } from "react-native-elements";
+import { useTasks } from "../providers/TasksProvider";
 
 export function EditTask(props) {
+    const [updatedSummary, setUpdatedSummary] = useState(props.task.summary);
+    const [updatedDescription, setUpdatedDescription] = useState(props.task.description);
+    const [overlayDisplayed, setoverlayDisplayed] = useState(true);
+    const { updateTask } = useTasks();
 
+    const handleOnPress = () => {
+        props.setIsEditing(false)
+        updateTask(props.task, updatedSummary, updatedDescription)
+    }
 
     return (
         <>
         <Overlay isVisible={props.isEditing} onBackdropPress={() => props.setIsEditing(false)}>
             <View style={{width: 200, height: 400}}>
-                    <Text>Task name</Text>
                     <Input 
-                        value={props.task.name}
+                        label="Task Name"
+                        value={updatedSummary}
+                        onChangeText={setUpdatedSummary}
                     />
-                    <Text>Description</Text>
                     <Input
-                        value={props.task.description}
+                        label="Task Description"
+                        value={updatedDescription}
+                        onChangeText={setUpdatedDescription}
                     />
-            {/* <Button />  */}
+            <Button 
+                title="Update"
+                onPress={handleOnPress}
+            /> 
             </View>
         </Overlay>
         </>

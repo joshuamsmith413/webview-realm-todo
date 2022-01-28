@@ -60,6 +60,7 @@ export function TaskItem({ task }) {
             setActionSheetVisible(false);
           }}
           actions={actions}
+          task={task}
         />
         <ListItem
           key={task.id}
@@ -69,7 +70,7 @@ export function TaskItem({ task }) {
           bottomDivider>
           <ListItem.Content>
             <ListItem.Title>
-              {task.name}
+              {task.summary}
               </ListItem.Title>
               <ListItem.Subtitle style={{ fontStyle: 'italic', fontSize: 10}}>
                 {task.description}

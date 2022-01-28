@@ -9,11 +9,16 @@ import { TasksProvider } from "./providers/TasksProvider";
 import { WelcomeView } from "./views/WelcomeView";
 import { ProjectsView } from "./views/ProjectsView";
 import { TasksView } from "./views/TasksView";
-
+import { setCustomText } from 'react-native-global-props';
 import { Logout } from "./components/Logout";
 
 const Stack = createStackNavigator();
-
+const customTextProps = { 
+  style: { 
+    fontFamily: "Avenir"
+  }
+}
+setCustomText(customTextProps);
 const App = () => {
   return (
     <AuthProvider>

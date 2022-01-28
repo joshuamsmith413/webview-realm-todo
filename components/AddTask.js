@@ -11,8 +11,7 @@ export function AddTask({ createTask }) {
   const [newTaskName, setNewTaskName] = useState("");
   const [description, setDescription] = useState("");
   const [summary, setSummary] = useState("");
-console.log('sum', summary)
-console.log('descript',description)
+
   return (
     <>
       <Overlay
@@ -30,10 +29,6 @@ console.log('descript',description)
           placeholder="description"
           onChangeText={(t) => setDescription(t)}
           value={description}/>
-          <Input 
-          placeholder="summary"
-          onChangeText={(t) => setSummary(t)}
-          value={summary}/>
           <Button
             title="Create"
             onPress={() => {
