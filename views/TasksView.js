@@ -17,15 +17,6 @@ export function TasksView({ navigation, route }) {
 
   const { tasks, createTask } = useTasks();
 
-  let something = tasks;
-  if (tasks.length === 0) {
-    something = [{
-      id: 1,
-      name: 'update tasks',
-      description: 'give users the ability to edit tasks'
-    }]
-  }
-
   useEffect(() => {
     navigation.setOptions({
       headerRight: function Header() {

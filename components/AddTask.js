@@ -26,9 +26,15 @@ export function AddTask({ createTask }) {
             autoFocus={true}
           />
           <Input 
-          placeholder="description"
-          onChangeText={(t) => setDescription(t)}
-          value={description}/>
+            placeholder="description"
+            onChangeText={(t) => setDescription(t)}
+            value={description}
+            onChange={setDescription}
+          />
+          <Input 
+          placeholder="summary"
+          onChange={setSummary}
+          value={summary}/>
           <Button
             title="Create"
             onPress={() => {
