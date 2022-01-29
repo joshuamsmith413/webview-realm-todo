@@ -5,13 +5,22 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { AuthProvider } from "./providers/AuthProvider";
 import { TasksProvider } from "./providers/TasksProvider";
+import { CounterProvider } from './providers/CounterProvider'
 
 import { WelcomeView } from "./views/WelcomeView";
 import { ProjectsView } from "./views/ProjectsView";
 import { TasksView } from "./views/TasksView";
 import { setCustomText } from 'react-native-global-props';
 import { Logout } from "./components/Logout";
+import CounterRedux from './views/CounterRedux';
+import CounterContextView from './views/CounterContextView';
+import { View } from "react-native";
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import counter from './src'
 
+
+const store = createStore(counter);
 const Stack = createStackNavigator();
 const customTextProps = { 
   style: { 
@@ -55,6 +64,18 @@ const App = () => {
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>
+      // <>
+      //   <View>
+      //     <Provider store={store}>
+      //       <CounterRedux foo='foo'/>
+      //     </Provider>
+      //     </View>
+      //     <View>
+      //     <CounterProvider>
+      //       <CounterContextView />
+      //     </CounterProvider>
+      //   </View>
+      // </>
   );
 };
 
