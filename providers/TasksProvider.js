@@ -49,14 +49,14 @@ const TasksProvider = ({ children, projectPartition }) => {
             console.log(
               `There are ${transferable} total transferable bytes, including the ones that have already been transferred`
               );
-              
+
               if (!syncSession.isConnected()) {
                 console.warn("Realm sync isn't connected");
               }
             },
             );
           }
-            
+
             const syncTasks = projectRealm.objects("Task");
             let sortedTasks = syncTasks.sorted("summary");
             setTasks([...sortedTasks]);
@@ -76,14 +76,14 @@ const TasksProvider = ({ children, projectPartition }) => {
     };
   }, [user, projectPartition]);
 
-  const createTask = (newTaskName, description, summary) => {
+  const createTask = (summary, description) => {
     const projectRealm = realmRef.current;
     projectRealm.write(() => {
       // Create a new task in the same partition -- that is, in the same project.
       projectRealm.create(
         "Task",
         new Task({
-          summary: newTaskName || "New Task",
+          summary: summary || "New Task",
           isComplete: false,
           description: description,
           partition: projectPartition,

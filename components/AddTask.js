@@ -8,7 +8,6 @@ import styles from "../stylesheet";
 // task is created in the realm.
 export function AddTask({ createTask }) {
   const [overlayVisible, setOverlayVisible] = useState(false);
-  const [newTaskName, setNewTaskName] = useState("");
   const [description, setDescription] = useState("");
   const [summary, setSummary] = useState("");
 
@@ -21,25 +20,22 @@ export function AddTask({ createTask }) {
       >
         <>
           <Input
-            placeholder="New Task Name"
-            onChangeText={(text) => setNewTaskName(text)}
+            placeholder="New Task Summary"
+            onChangeText={(text) => setSummary(text)}
             autoFocus={true}
+            value={summary}
           />
-          <Input 
+          <Input
             placeholder="description"
             onChangeText={(t) => setDescription(t)}
             value={description}
             onChange={setDescription}
           />
-          <Input 
-          placeholder="summary"
-          onChange={setSummary}
-          value={summary}/>
           <Button
             title="Create"
             onPress={() => {
               setOverlayVisible(false);
-              createTask(newTaskName, description, summary);
+              createTask(summary, description);
             }}
           />
         </>

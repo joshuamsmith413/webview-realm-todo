@@ -18,8 +18,8 @@ export function EditTask(props) {
         <>
         <Overlay isVisible={props.isEditing} onBackdropPress={() => props.setIsEditing(false)}>
             <View style={{width: 200, height: 400}}>
-                    <Input 
-                        label="Task Name"
+                    <Input
+                        label="Task Summary"
                         value={updatedSummary}
                         onChangeText={setUpdatedSummary}
                     />
@@ -28,10 +28,10 @@ export function EditTask(props) {
                         value={updatedDescription}
                         onChangeText={setUpdatedDescription}
                     />
-            <Button 
+            <Button
                 title="Update"
                 onPress={handleOnPress}
-            /> 
+            />
             </View>
         </Overlay>
         </>
