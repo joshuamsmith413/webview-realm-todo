@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { ListItem, Text } from "react-native-elements";
 import { useTasks } from "../providers/TasksProvider";
 import { ActionSheet } from "./ActionSheet";
+import { EditTask } from './EditTask'
 
 import styles from "../stylesheet";
 
 export function TaskItem({ task }) {
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const { deleteTask, setTaskStatus } = useTasks();
   const actions = [
@@ -16,6 +18,12 @@ export function TaskItem({ task }) {
         deleteTask(task);
       },
     },
+    {
+      title: "Edit",
+      action: () => {
+        setIsEditing(true)
+      }
+    }
   ];
 
   // For each possible status other than the current status, make an action to
@@ -41,30 +49,39 @@ export function TaskItem({ task }) {
 
   return (
     <>
-      <ActionSheet
-        visible={actionSheetVisible}
-        closeOverlay={() => {
-          setActionSheetVisible(false);
-        }}
-        actions={actions}
-      />
-      <ListItem
-        key={task.id}
-        onPress={() => {
-          setActionSheetVisible(true);
-        }}
-        bottomDivider>
-        <ListItem.Content>
-          <ListItem.Title>
-            {task.summary}
-            </ListItem.Title>
-        </ListItem.Content>
-        {
-          task.isComplete === true ? (
-            <Text>&#10004; {/* checkmark */}</Text>
-          ) : null
-        }
-      </ListItem>
-    </>
+      <EditTask 
+        task={task} 
+        isEditing={isEditing} 
+        setIsEditing={setIsEditing} 
+      /> 
+        <ActionSheet
+          visible={actionSheetVisible}
+          closeOverlay={() => {
+            setActionSheetVisible(false);
+          }}
+          actions={actions}
+          task={task}
+        />
+        <ListItem
+          key={task.id}
+          onPress={() => {
+            setActionSheetVisible(true);
+          }}
+          bottomDivider>
+          <ListItem.Content>
+            <ListItem.Title>
+              {task.summary}
+              </ListItem.Title>
+              <ListItem.Subtitle style={{ fontStyle: 'italic', fontSize: 10}}>
+                {task.description}
+              </ListItem.Subtitle>
+          </ListItem.Content>
+          {
+            task.isComplete === true ? (
+              <Text>&#10004; {/* checkmark */}</Text>
+            ) : null
+          }
+        </ListItem>
+      </> 
   );
 }

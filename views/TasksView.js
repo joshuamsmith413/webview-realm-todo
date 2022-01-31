@@ -16,6 +16,7 @@ export function TasksView({ navigation, route }) {
   const [overlayVisible, setOverlayVisible] = useState(false);
 
   const { tasks, createTask } = useTasks();
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: function Header() {

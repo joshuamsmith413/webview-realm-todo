@@ -35,33 +35,35 @@ const TasksProvider = ({ children, projectPartition }) => {
       },
     };
     // open a realm for this particular project
-    Realm.open(config).then((projectRealm) => {
+    Realm.open({schema: [Task.schema]}).then((projectRealm) => {
       realmRef.current = projectRealm;
 
       const syncSession = realmRef.current.syncSession;
+      if (!!syncSession) {
 
-      syncSession.addProgressNotification(
-        "upload",
-        "reportIndefinitely",
-        (transferred, transferable) => {
-          console.log(`${transferred} bytes has been transferred`);
-          console.log(
-            `There are ${transferable} total transferable bytes, including the ones that have already been transferred`
-          );
+        syncSession.addProgressNotification(
+          "upload",
+          "reportIndefinitely",
+          (transferred, transferable) => {
+            console.log(`${transferred} bytes has been transferred`);
+            console.log(
+              `There are ${transferable} total transferable bytes, including the ones that have already been transferred`
+              );
 
-          if (!syncSession.isConnected()) {
-            console.warn("Realm sync isn't connected");
+              if (!syncSession.isConnected()) {
+                console.warn("Realm sync isn't connected");
+              }
+            },
+            );
           }
-        },
-      );
 
-      const syncTasks = projectRealm.objects("Task");
-      let sortedTasks = syncTasks.sorted("summary");
-      setTasks([...sortedTasks]);
-      sortedTasks.addListener(() => {
-        setTasks([...sortedTasks]);
-      });
-    });
+            const syncTasks = projectRealm.objects("Task");
+            let sortedTasks = syncTasks.sorted("summary");
+            setTasks([...sortedTasks]);
+            sortedTasks.addListener(() => {
+              setTasks([...sortedTasks]);
+            });
+        });
 
     return () => {
       // cleanup function
@@ -74,21 +76,29 @@ const TasksProvider = ({ children, projectPartition }) => {
     };
   }, [user, projectPartition]);
 
-  const createTask = (newTaskName) => {
+  const createTask = (summary, description) => {
     const projectRealm = realmRef.current;
     projectRealm.write(() => {
       // Create a new task in the same partition -- that is, in the same project.
       projectRealm.create(
         "Task",
         new Task({
-          summary: newTaskName || "New Task",
+          summary: summary || "New Task",
           isComplete: false,
-          description: "",
+          description: description,
           partition: projectPartition,
         })
       );
     });
   };
+
+  const updateTask = (taskToUpdate, summary, description) => {
+
+    realmRef.current.write(() => {
+      taskToUpdate.summary = summary
+      taskToUpdate.description = description
+    })
+  }
 
   const setTaskStatus = (task, isComplete) => {
     const projectRealm = realmRef.current;
@@ -116,6 +126,7 @@ const TasksProvider = ({ children, projectPartition }) => {
         createTask,
         deleteTask,
         setTaskStatus,
+        updateTask,
         tasks,
       }}
     >
